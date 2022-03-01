@@ -30,6 +30,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'recipe.urls'
+AUTH_USER_MODEL = 'authentication.User'
 
 TEMPLATES = [
     {
