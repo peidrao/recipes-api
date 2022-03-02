@@ -7,4 +7,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('authentication.urls')),
     path('api-auth/', include('rest_framework.urls')),
+    path('silk/', include('silk.urls', namespace='silk'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
