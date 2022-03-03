@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models import signals
+from django.template.defaultfilters import slugify
+
 
 
 class Tag(models.Model):
@@ -8,3 +11,10 @@ class Tag(models.Model):
 
     def __str__(self) -> str:
         return str(self.name)
+
+
+def slug_pre_save(signal, instance, sender, **kwargs):
+    instance.slug = slugify(instance.name)
+
+
+signals.pre_save.connect(slug_pre_save, sender=Tag)
