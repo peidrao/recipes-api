@@ -6,12 +6,14 @@ from rest_framework import routers
 
 
 from authentication.views import UserViewSet
-from recipes.views import CategoryListView, TagViewSet
+from recipes.views import IngredientViewSet, RecipeViewSet, TagViewSet
 
 router = routers.DefaultRouter()
 
 router.register(r'api/v1/tags', TagViewSet, basename='tags')
 router.register(r'api/v1/users', UserViewSet, basename='users')
+router.register(r'api/v1/ingredients', IngredientViewSet, basename='ingredients')
+router.register(r'api/v1/recipes', RecipeViewSet, basename='recipes')
 
 
 urlpatterns = [
@@ -19,7 +21,7 @@ urlpatterns = [
     path('', include('authentication.urls')),
     path('', include(router.urls)),
 
-    path('api/v1/categories/', CategoryListView.as_view()),
+    # path('api/v1/categories/', CategoryListView.as_view()),
 
     path('api-auth/', include('rest_framework.urls')),
     path('silk/', include('silk.urls', namespace='silk'))

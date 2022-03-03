@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Tag
+from .models import Recipe, Tag, Ingredient
 
 class TagSerializer(serializers.ModelSerializer):
     slug = serializers.SlugField(read_only=True)
@@ -10,9 +10,24 @@ class TagSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class IngredientSerializer(serializers.ModelSerializer):
+
+    class Meta: 
+        model = Ingredient
+        fields = '__all__'
+    
+
+class RecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Tag
-        fields = ('name', 'slug')
+        model = Recipe
+        fields = '__all__'
+
+
+
+# class CategorySerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = Tag
+#         fields = ('name', 'slug')
 
