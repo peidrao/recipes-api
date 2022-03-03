@@ -3,10 +3,11 @@ from django.db.models import signals
 from django.template.defaultfilters import slugify
 
 
-
 class Tag(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)
+    origin = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING)
     is_active = models.BooleanField(default=True)
 
     def __str__(self) -> str:
