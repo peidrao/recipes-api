@@ -1,6 +1,6 @@
-from rest_framework import viewsets, generics
-from rest_framework.response import Response 
+from rest_framework import viewsets
 
+from authentication.permissions import IsSuperUser
 from .serializers import TagSerializer, IngredientSerializer, RecipeSerializer
 from .models import Tag, Ingredient, Recipe
 
@@ -8,6 +8,7 @@ from .models import Tag, Ingredient, Recipe
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.filter(is_active=True)
     serializer_class = TagSerializer
+    permission_classes = (IsSuperUser,)
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
