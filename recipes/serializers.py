@@ -24,10 +24,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-# class CategorySerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = Tag
-#         fields = ('name', 'slug')
-
+    def create(self, validated_data):
+        
+        return super().create(validated_data)
