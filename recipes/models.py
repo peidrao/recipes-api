@@ -45,7 +45,7 @@ class Recipe(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self) -> str:
-        return str(self.title)
+        return f'{self.id}-{self.title}'
 
 
 def slug_pre_save(signal, instance, sender, **kwargs):
