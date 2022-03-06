@@ -46,13 +46,15 @@ class IngredientDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = IngredientSerializer
     permission_classes = (HasUserPermission,)
 
-    def put(self, request, pk):
-        try:
-            tag = self.queryset.get(id=pk)
-        except Ingredient.DoesNotExist:
-            return Response("ingredient not found", status=404)
-        serializer = self.serializer_class(tag, many=False)
-        return Response(serializer.data, status=200)
+    # def put(self, request, pk):
+    #     try:
+    #         ingredient = self.get_object()
+    #     except Ingredient.DoesNotExist:
+    #         return Response("ingredient not found", status=404)
+    #     serializer = self.serializer_class(ingredient, data=request.data,  context={'request': request, 'view':self, 'format':None})
+    #     if serializer.is_valid():
+    #         return Response(serializer.data, status=200)    
+    #     return Response(serializer.errors)
 
 
 

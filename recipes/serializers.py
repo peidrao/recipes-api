@@ -29,6 +29,19 @@ class IngredientSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Ingredient
         fields = '__all__'
+
+    def create(self, validated_data):
+        instance = super(IngredientSerializer, self).create(validated_data)
+        instance.user = self.context['request'].user
+        instance.save()
+        return instance
+    
+    # def update(self, instance, validated_data):
+    #     import pdb ; pdb.set_trace()
+        
+    #     instance.user = self.context['request'].user
+    #     instance.save()
+    #     return instance
     
 
 class RecipeSerializer(serializers.ModelSerializer):
