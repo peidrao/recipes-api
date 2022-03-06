@@ -10,16 +10,21 @@ from .models import Tag, Ingredient, Recipe
 class TagListCreateView(generics.ListCreateAPIView):
     queryset = Tag.objects.filter(is_active=True)
     serializer_class = TagSerializer
-    permission_classes = (IsSuperUser, HasUserPermission)
+    permission_classes = (IsSuperUser,)
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(user=self.request.user)
+        return queryset
+        
 
 class TagDetailView(generics.RetrieveUpdateAPIView):
     queryset = Tag.objects.filter(is_active=True)
     serializer_class = TagSerializer
-    permission_classes = (IsSuperUser, HasUserPermission)
+    permission_classes = (HasUserPermission,)
 
-    def put(self, request, id):
+    def put(self, request, pk):
         try:
-            tag = self.queryset.get(id=id)
+            tag = self.queryset.get(id=pk)
         except Tag.DoesNotExist:
             return Response("tag not found", status=404)
         serializer = self.serializer_class(tag, many=False)

@@ -23,7 +23,7 @@ urlpatterns = [
     path('api/v1/recipes/', RecipeCreateView.as_view()),
     path('api/v1/recipes/<int:id>', RecipeDetailView.as_view()),
     path('api/v1/tags/', TagListCreateView.as_view()),
-    path('api/v1/tags/<int:id>', TagDetailView.as_view()),
+    path('api/v1/tags/<int:pk>', TagDetailView.as_view()),
     # path('api/v1/categories/', CategoryListView.as_view()),
 
     path('api-auth/', include('rest_framework.urls')),
