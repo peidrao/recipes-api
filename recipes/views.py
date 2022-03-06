@@ -31,9 +31,29 @@ class TagDetailView(generics.RetrieveUpdateAPIView):
         return Response(serializer.data, status=200)
 
 
-class IngredientViewSet(viewsets.ModelViewSet):
+class IngredientListCreateView(generics.ListCreateAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+    permission_classes = (IsSuperUser,)
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(user=self.request.user)
+        return queryset
+        
+
+class IngredientDetailView(generics.RetrieveUpdateAPIView):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    permission_classes = (HasUserPermission,)
+
+    def put(self, request, pk):
+        try:
+            tag = self.queryset.get(id=pk)
+        except Ingredient.DoesNotExist:
+            return Response("ingredient not found", status=404)
+        serializer = self.serializer_class(tag, many=False)
+        return Response(serializer.data, status=200)
+
 
 
 class RecipeCreateView(generics.ListCreateAPIView):
@@ -54,6 +74,3 @@ class RecipeDetailView(generics.RetrieveUpdateAPIView):
         serializer = self.serializer_class(recipe, many=False)
         return Response(serializer.data, status=200)
 
-# class CategoryListView(generics.ListAPIView):
-#     queryset = Tag.objects.all()
-#     serializer_class = CategorySerializer
