@@ -2,14 +2,28 @@ from rest_framework import viewsets, status, generics
 from rest_framework.response import Response
 
 from authentication.permissions import IsSuperUser
+from .permissions import HasUserPermission
 from .serializers import TagSerializer, IngredientSerializer, RecipeSerializer
 from .models import Tag, Ingredient, Recipe
 
 
-class TagViewSet(viewsets.ModelViewSet):
+class TagListCreateView(generics.ListCreateAPIView):
     queryset = Tag.objects.filter(is_active=True)
     serializer_class = TagSerializer
-    permission_classes = (IsSuperUser,)
+    permission_classes = (IsSuperUser, HasUserPermission)
+
+class TagDetailView(generics.RetrieveUpdateAPIView):
+    queryset = Tag.objects.filter(is_active=True)
+    serializer_class = TagSerializer
+    permission_classes = (IsSuperUser, HasUserPermission)
+
+    def put(self, request, id):
+        try:
+            tag = self.queryset.get(id=id)
+        except Tag.DoesNotExist:
+            return Response("tag not found", status=404)
+        serializer = self.serializer_class(tag, many=False)
+        return Response(serializer.data, status=200)
 
 
 class IngredientViewSet(viewsets.ModelViewSet):

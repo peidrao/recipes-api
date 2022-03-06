@@ -21,6 +21,7 @@ class Tag(models.Model):
     origin = models.ForeignKey(
         'self', null=True, blank=True, on_delete=models.DO_NOTHING)
     is_active = models.BooleanField(default=True)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True)
 
     def __str__(self) -> str:
         return str(self.name)
