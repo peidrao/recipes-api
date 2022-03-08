@@ -36,13 +36,6 @@ class IngredientSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
     
-    # def update(self, instance, validated_data):
-    #     import pdb ; pdb.set_trace()
-        
-    #     instance.user = self.context['request'].user
-    #     instance.save()
-    #     return instance
-    
 
 class RecipeSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
