@@ -16,7 +16,7 @@ router.register(r'api/v1/users', UserViewSet, basename='users')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('authentication.urls')),
-    path('', include('recipes.urls')),
+    path('', include('recipes.urls', namespace='recipes')),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
     path('silk/', include('silk.urls', namespace='silk'))
