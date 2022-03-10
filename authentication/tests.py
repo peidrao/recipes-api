@@ -42,10 +42,9 @@ class UserViewTest(APITestCase):
         
 
     def test_delete_user(self):
-        user = baker.make(User, is_superuser=True, username='profile', is_active=True)
+        user2 = baker.make(User, is_superuser=True, username='profile2')
         response = self.client.delete(
-            reverse('authentication:users-detail', args=[user.id]), format='json')
-        
+            reverse('authentication:users-detail', args=[user2.id]), format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
     
     def test_delete_user_not_pk(self):
