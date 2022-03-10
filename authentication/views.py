@@ -1,6 +1,6 @@
 import jwt
-from datetime import datetime
 
+from django.utils import timezone
 from django.conf import settings
 from rest_framework import viewsets, status, exceptions, views
 from rest_framework.response import Response
@@ -20,11 +20,12 @@ class UserViewSet(viewsets.ModelViewSet):
         try:
             user = self.queryset.get(id=kwargs['pk'])
             user.is_active = False
-            user.deleted_at = datetime.now()
+            user.deleted_at = timezone.now()
             user.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
         except User.DoesNotExist:
             return Response(data='User does not exists', status=status.HTTP_404_NOT_FOUND)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        
         
 
 class ChangePasswordViewSet(generics.UpdateAPIView):
