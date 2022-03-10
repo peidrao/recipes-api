@@ -1,4 +1,5 @@
 
+from random import randint
 from model_bakery import baker
 from django.urls import reverse
 from rest_framework.test import APITestCase
@@ -38,4 +39,18 @@ class UserViewTest(APITestCase):
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['username'], user.username)
+        
+
+    def test_delete_user(self):
+        user = baker.make(User, is_superuser=True, username='profile', is_active=True)
+        response = self.client.delete(
+            reverse('authentication:users-detail', args=[user.id]), format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+    
+    def test_delete_user_not_pk(self):
+        response = self.client.delete(
+            reverse('authentication:users-detail', args=[randint(400, 500)]), format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         
