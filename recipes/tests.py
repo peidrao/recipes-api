@@ -18,3 +18,12 @@ class TagListCreateViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 5)
 
+    def test_create_tag(self):
+        user = baker.make(User, is_superuser=True)
+        payload = dict(name="new tag", user_id=user.id)
+        
+        self.client.force_authenticate(user)
+        response = self.client.post(reverse('recipes:tags-list'), payload, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['slug'], Tag.objects.last().slug)
