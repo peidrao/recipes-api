@@ -26,9 +26,14 @@ class TagDetailView(generics.RetrieveUpdateAPIView):
         try:
             tag = self.queryset.get(id=pk)
         except Tag.DoesNotExist:
-            return Response("tag not found", status=404)
-        serializer = self.serializer_class(tag, many=False)
-        return Response(serializer.data, status=200)
+            return Response("tag not found", status=status.HTTP_404_NOT_FOUND)
+        serializer = self.serializer_class(tag, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
 
 class IngredientListCreateView(generics.ListCreateAPIView):
