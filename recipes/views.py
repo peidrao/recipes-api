@@ -17,7 +17,7 @@ class TagListCreateView(generics.ListCreateAPIView):
         return queryset
         
 
-class TagDetailView(generics.RetrieveUpdateAPIView):
+class TagDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tag.objects.filter(is_active=True)
     serializer_class = TagSerializer
     permission_classes = (HasUserPermission,)
@@ -33,7 +33,17 @@ class TagDetailView(generics.RetrieveUpdateAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)    
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
+    def delete(self, request, pk):
+        try:
+            tag = self.queryset.get(id=pk)
+        except Tag.DoesNotExist:
+            return Response('tag not found', status=status.HTTP_404_NOT_FOUND)
+
+        tag.is_active = False
+        tag.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class IngredientListCreateView(generics.ListCreateAPIView):
