@@ -18,4 +18,3 @@ class IsSuperUser(BasePermission):
             return True
         
         return False
-
