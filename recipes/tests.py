@@ -102,3 +102,15 @@ class IngredientListViewTest(APITestCase):
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
+    
+    def test_create_ingredient(self):
+        user = baker.make(User, is_superuser=True)
+
+        payload = dict(user_id=user.id, name='Ingredient 1')
+
+        self.client.force_authenticate(user)
+        response = self.client.post(reverse('recipes:ingredients-list'), data=payload, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
+    
