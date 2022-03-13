@@ -5,7 +5,8 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
 from authentication.models import User
-from .models import Tag
+from .models import Ingredient, Tag
+
 
 class TagListCreateViewTest(APITestCase):
     def test_list_tags(self):
@@ -78,3 +79,26 @@ class TagListCreateViewTest(APITestCase):
         response = self.client.delete(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+
+class IngredientListViewTest(APITestCase):
+    def test_list_ingredients(self):
+        user = baker.make(User, is_superuser=True)
+        for _ in range(0, 10):
+            baker.make(Ingredient, user=user, name=f'ingredient_{_}')
+        
+        self.client.force_authenticate(user)
+        response = self.client.get(reverse('recipes:ingredients-list'), format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 10)
+    
+    def test_list_empty_ingredients(self):
+        user = baker.make(User, is_superuser=True)
+
+        self.client.force_authenticate(user)
+        response = self.client.get(reverse('recipes:ingredients-list'), format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
