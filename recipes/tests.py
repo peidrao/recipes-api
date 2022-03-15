@@ -131,3 +131,58 @@ class IngredientDetailViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], ingredient.name)
         self.assertEqual(response.data['user'], ingredient.user.id)
+
+    def test_ingredient_get_by_id_not_found(self):
+        user = baker.make(User, is_superuser=True)
+
+        self.client.force_authenticate(user)
+        response = self.client.get(
+            reverse('recipes:ingredients-detail', args=[randint(1000, 1500)]), format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_ingredient_update(self):
+        user = baker.make(User, is_superuser=True)
+        ingredient = baker.make(Ingredient, user=user, name='Potato')
+        payload = dict(name='Orange')
+        self.client.force_authenticate(user)
+        response = self.client.put(
+            reverse('recipes:ingredients-detail', args=[ingredient.id]), payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], 'Orange')
+    
+    def test_ingredient_update_user_different(self):
+        user = baker.make(User, is_superuser=True)
+        user2 = baker.make(User, is_superuser=True)
+
+        ingredient = baker.make(Ingredient, user=user, name='Potato')
+        payload = dict(name='Orange')
+        self.client.force_authenticate(user2)
+        response = self.client.put(
+            reverse('recipes:ingredients-detail', args=[ingredient.id]), payload, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    
+    def test_ingredient_destroy(self):
+        user = baker.make(User, is_superuser=True)
+
+        ingredient = baker.make(Ingredient, user=user, name='Potato')
+        
+        self.client.force_authenticate(user)
+        response = self.client.delete(
+            reverse('recipes:ingredients-detail', args=[ingredient.id]), format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+    
+    def test_ingredient_destroy(self):
+        user = baker.make(User, is_superuser=True)
+        
+        self.client.force_authenticate(user)
+        response = self.client.delete(
+            reverse('recipes:ingredients-detail', args=[randint(1000, 2000)]), format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+
+    
