@@ -56,7 +56,7 @@ class IngredientListCreateView(generics.ListCreateAPIView):
         return queryset
         
 
-class IngredientDetailView(generics.RetrieveUpdateAPIView):
+class IngredientDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (HasUserPermission,)
