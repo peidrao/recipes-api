@@ -11,5 +11,5 @@ urlpatterns = [
     path('api/v1/tags/', TagListCreateView.as_view(), name='tags-list'),
     path('api/v1/tags/<int:pk>', TagDetailView.as_view(), name='tags-detail'),
     path('api/v1/ingredients/', IngredientListCreateView.as_view(), name='ingredients-list'),
-    path('api/v1/ingredients/<int:pk>', IngredientDetailView.as_view()),
+    path('api/v1/ingredients/<int:pk>', IngredientDetailView.as_view(), name='ingredients-detail'),
 ]
