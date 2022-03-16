@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
 from authentication.models import User
-from .models import Ingredient, Tag
+from .models import Ingredient, Recipe, Tag
 
 
 class TagListCreateViewTest(APITestCase):
@@ -185,4 +185,48 @@ class IngredientDetailViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
     
 
-    
+class RecipeCreateViewTest(APITestCase):
+    def test_list_recipes(self):
+        user = baker.make(User, is_superuser=True)
+        
+        for _ in range(0, 10):
+            baker.make(Recipe, title='Fries{_}', user=user, time_minutes=10)
+
+        self.client.force_authenticate(user)
+        response = self.client.get(
+            reverse('recipes:recipes-list'), format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 10)
+
+    def test_list_empty_recipes(self):
+        user = baker.make(User, is_superuser=True)
+
+        self.client.force_authenticate(user)
+        response = self.client.get(
+            reverse('recipes:ingredients-list'), format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_create_recipe(self):
+        user = baker.make(User, is_superuser=True)
+        tag1 = baker.make(Tag, name='juice', user=user)
+        tag2 = baker.make(Tag, name='pizza', user=user)
+
+        ingredient = baker.make(Ingredient, user=user, name='tomato')
+        ingredient2 = baker.make(Ingredient, user=user, name='cheese')
+        ingredient3 = baker.make(Ingredient, user=user, name='ham')
+        ingredient4 = baker.make(Ingredient, user=user, name='chicken')
+            
+        payload = dict(user_id=user.id, title='Chicken Pizza', time_minutes=30, price=60.99, 
+                        ingredient=[ingredient.id, ingredient2.id, ingredient3.id, ingredient4.id],
+                        tags=[tag1.id, tag2.id])
+
+        self.client.force_authenticate(user)
+        response = self.client.post(
+            reverse('recipes:recipes-list'), data=payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['title'], 'Chicken Pizza')
+        self.assertEqual(response.data['price'], '60.99')
