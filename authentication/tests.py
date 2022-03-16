@@ -76,4 +76,37 @@ class UserViewTest(APITestCase):
             reverse('authentication:users-detail', args=[randint(100, 200)]), payload, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class ChangePasswordViewSetTest(APITestCase):
+    def test_user_change_password(self):
+        user = baker.make(User, is_superuser=True, username='profile')
+        user.set_password('123456')
+        
+        payload = dict(old_password='123456', new_password='@123456@')
+        self.client.force_authenticate(user)
+        response = self.client.put(
+            reverse('authentication:change_password'), payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+    
+    def test_user_change_password_different(self):
+        user = baker.make(User, is_superuser=True, username='profile')
+        user.set_password('123456')
+        
+        payload = dict(old_password='@123456', new_password='@123456@')
+        self.client.force_authenticate(user)
+        response = self.client.put(
+            reverse('authentication:change_password'), payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_user_change_password_not_new_password(self):
+        user = baker.make(User, is_superuser=True, username='profile')
+        user.set_password('123456')
+        
+        payload = dict(new_password='@123456@')
+        self.client.force_authenticate(user)
+        response = self.client.put(
+            reverse('authentication:change_password'), payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     
