@@ -220,7 +220,7 @@ class RecipeCreateViewTest(APITestCase):
         ingredient4 = baker.make(Ingredient, user=user, name='chicken')
             
         payload = dict(user_id=user.id, title='Chicken Pizza', time_minutes=30, price=60.99, 
-                        ingredient=[ingredient.id, ingredient2.id, ingredient3.id, ingredient4.id],
+                        ingredients=[ingredient.id, ingredient2.id, ingredient3.id, ingredient4.id],
                         tags=[tag1.id, tag2.id])
 
         self.client.force_authenticate(user)
