@@ -39,6 +39,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
@@ -54,3 +55,14 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance.user = self.context['request'].user
         instance.save()
         return instance
+
+    def get_tags(self, obj):
+        tags = obj.tags.all()
+        json = []
+        for tag in tags:
+            i = {}
+            i['name'] = tag.name
+            i['slug'] = tag.slug
+            json.append(i)
+        
+        return json
