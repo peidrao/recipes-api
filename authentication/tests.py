@@ -40,7 +40,6 @@ class UserViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['username'], user.username)
         
-
     def test_delete_user(self):
         user2 = baker.make(User, is_superuser=True, username='profile2')
         response = self.client.delete(
@@ -52,4 +51,29 @@ class UserViewTest(APITestCase):
             reverse('authentication:users-detail', args=[randint(400, 500)]), format='json')
         
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_user_put(self):
+        user = baker.make(User, is_superuser=True, username='profile', 
+            first_name='Profile', last_name='Test')
         
+        payload = dict(username='jose', first_name='Jose', last_name='Luis')
+
+        response = self.client.put(
+            reverse('authentication:users-detail', args=[user.id]), payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], 'jose')
+        self.assertEqual(response.data['first_name'], 'Jose')
+        self.assertEqual(response.data['last_name'], 'Luis')
+    
+    def test_user_put_not_found(self):
+        baker.make(User, is_superuser=True, username='profile', 
+            first_name='Profile', last_name='Test')
+        
+        payload = dict(username='jose', first_name='Jose', last_name='Luis')
+
+        response = self.client.put(
+            reverse('authentication:users-detail', args=[randint(100, 200)]), payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
