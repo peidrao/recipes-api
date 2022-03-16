@@ -42,7 +42,7 @@ class Recipe(models.Model):
     link = models.CharField(max_length=255, blank=True)
 
     ingredients = models.ManyToManyField(Ingredient, blank=True)
-    tags = models.ManyToManyField(Tag, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True, related_name='recipes_tags')
     image = models.ImageField(null=True, upload_to=recipe_image_file_path)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
 
