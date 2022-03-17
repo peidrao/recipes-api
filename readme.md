@@ -11,7 +11,7 @@ representando em código para um serviço que lista as receitas
 **test_recipe_get_all**
 
 
-### Coverage
+## Coverage
 
 > coverage run manage.py test
 
