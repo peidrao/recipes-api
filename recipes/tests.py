@@ -273,3 +273,25 @@ class RecipeDetailViewTest(APITestCase):
             reverse('recipes:recipes-detail', args=[randint(0,0)]), format='json')
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_recipe_update(self):
+        user = baker.make(User, is_superuser=True)
+        recipe = baker.make(Recipe, user=user, title='Recipe#3', time_minutes=50)
+        payload = dict(title='Special Recipe', time_minutes=40, price=59.95)
+        self.client.force_authenticate(user)
+        response = self.client.put(
+            reverse('recipes:recipes-detail', args=[recipe.id]), payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], 'Special Recipe')
+        self.assertEqual(response.data['time_minutes'], 40)
+
+    
+    def test_recipe_update_not_found(self):
+        user = baker.make(User, is_superuser=True)
+        
+        payload = dict(title='Special Recipe', time_minutes=40, price=59.95)
+        self.client.force_authenticate(user)
+        response = self.client.put(
+            reverse('recipes:recipes-detail', args=[randint(0,0)]), payload, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
