@@ -67,13 +67,13 @@ class RecipeCreateView(generics.ListCreateAPIView):
     serializer_class = RecipeSerializer
 
 
-class RecipeDetailView(generics.RetrieveUpdateAPIView):
+class RecipeDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
 
-    def get(self, request, id):
+    def get(self, request, pk):
         try:
-            recipe = self.queryset.get(id=id)
+            recipe = self.queryset.get(pk=pk)
         except Recipe.DoesNotExist:
             return Response("Recipe not found", status=404)
 
