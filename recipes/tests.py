@@ -47,6 +47,7 @@ class TagListCreateViewTest(APITestCase):
 
         self.client.force_authenticate(user)
         url = reverse('recipes:tags-detail', args=[randint(500, 1000)])
+        
         response = self.client.put(url, {}, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -230,3 +231,28 @@ class RecipeCreateViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['title'], 'Chicken Pizza')
         self.assertEqual(response.data['price'], '60.99')
+
+
+class RecipeDetailViewTest(APITestCase):
+    def test_recipe_get(self):
+        user = baker.make(User, is_superuser=True)
+        recipe = baker.make(Recipe, title='Recipe#1')
+
+        self.client.force_authenticate(user)
+        response = self.client.get(
+            reverse('recipes:recipes-detail', args=[recipe.id]), format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], recipe.title)
+    
+    def test_recipe_get_not_found(self):
+        user = baker.make(User, is_superuser=True)
+        recipe = baker.make(Recipe, title='Recipe#1')
+
+        self.client.force_authenticate(user)
+        response = self.client.get(
+            reverse('recipes:recipes-detail', args=[randint(0, 0)]), format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data, 'Recipe not found')
+        
