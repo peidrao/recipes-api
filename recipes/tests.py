@@ -247,7 +247,6 @@ class RecipeDetailViewTest(APITestCase):
     
     def test_recipe_get_not_found(self):
         user = baker.make(User, is_superuser=True)
-        recipe = baker.make(Recipe, title='Recipe#1')
 
         self.client.force_authenticate(user)
         response = self.client.get(
@@ -255,4 +254,22 @@ class RecipeDetailViewTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.data, 'Recipe not found')
-        
+    
+    def test_recipe_destroy(self):
+        user = baker.make(User, is_superuser=True)
+        recipe = baker.make(Recipe, title='Recipe#2')
+
+        self.client.force_authenticate(user)
+        response = self.client.delete(
+            reverse('recipes:recipes-detail', args=[recipe.id]), format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+    
+    def test_recipe_destroy_not_found(self):
+        user = baker.make(User, is_superuser=True)
+
+        self.client.force_authenticate(user)
+        response = self.client.delete(
+            reverse('recipes:recipes-detail', args=[randint(0,0)]), format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
