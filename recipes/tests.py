@@ -85,7 +85,7 @@ class TagListCreateViewTest(APITestCase):
 
 
 class IngredientListViewTest(APITestCase):
-    def test_list_ingredients(self):
+    def test_ingredient_list(self):
         user = baker.make(User, is_superuser=True)
         for _ in range(0, 10):
             baker.make(Ingredient, user=user, name=f'ingredient_{_}')
@@ -97,7 +97,7 @@ class IngredientListViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 10)
 
-    def test_list_empty_ingredients(self):
+    def test_ingredient_list_empty(self):
         user = baker.make(User, is_superuser=True)
 
         self.client.force_authenticate(user)
@@ -107,7 +107,7 @@ class IngredientListViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
 
-    def test_create_ingredient(self):
+    def test_ingredient_create(self):
         user = baker.make(User, is_superuser=True)
 
         payload = dict(user_id=user.id, name='Ingredient 1')
