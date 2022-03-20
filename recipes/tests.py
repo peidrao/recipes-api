@@ -187,7 +187,7 @@ class IngredientDetailViewTest(APITestCase):
     
 
 class RecipeCreateViewTest(APITestCase):
-    def test_list_recipes(self):
+    def test_recipe_list(self):
         user = baker.make(User, is_superuser=True)
         
         for _ in range(0, 10):
@@ -200,7 +200,7 @@ class RecipeCreateViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 10)
 
-    def test_list_empty_recipes(self):
+    def test_recipe_list_empty(self):
         user = baker.make(User, is_superuser=True)
 
         self.client.force_authenticate(user)
