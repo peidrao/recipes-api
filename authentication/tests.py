@@ -8,7 +8,7 @@ from authentication.models import User
 
 
 class UserViewTest(APITestCase):
-    def test_list_users(self):
+    def test_user_list(self):
         user = baker.make(User, is_superuser=True)
         for _ in range(0, 5):
             baker.make(User)
@@ -20,7 +20,7 @@ class UserViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 6)
 
-    def test_create_user(self):
+    def test_user_create(self):
         payload = dict(username='profile', email='profile@teste.com', password='@profile',
                        first_name='Profile', last_name='Test', gender='MAN', phone='8499655648',
                        birthday='1999-06-06')
@@ -31,7 +31,7 @@ class UserViewTest(APITestCase):
         self.assertEqual(response.data['username'], User.objects.last().username)
         self.assertEqual(response.data['email'], User.objects.last().email)
     
-    def test_get_user_by_id(self):
+    def test_user_get_by_id(self):
         user = baker.make(User, is_superuser=True, username='profile')
         
         response = self.client.get(
@@ -40,13 +40,13 @@ class UserViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['username'], user.username)
         
-    def test_delete_user(self):
+    def test_user_delete(self):
         user2 = baker.make(User, is_superuser=True, username='profile2')
         response = self.client.delete(
             reverse('authentication:users-detail', args=[user2.id]), format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
     
-    def test_delete_user_not_pk(self):
+    def test_user_delete_not_pk(self):
         response = self.client.delete(
             reverse('authentication:users-detail', args=[randint(400, 500)]), format='json')
         
