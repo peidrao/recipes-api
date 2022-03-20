@@ -9,7 +9,7 @@ from .models import Ingredient, Recipe, Tag
 
 
 class TagListCreateViewTest(APITestCase):
-    def test_list_tags(self):
+    def test_tags_list(self):
         user = baker.make(User, is_superuser=True)
         for _ in range(0, 5):
             baker.make(Tag, user=user)
@@ -20,7 +20,7 @@ class TagListCreateViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 5)
 
-    def test_create_tag(self):
+    def test_tag_create(self):
         user = baker.make(User, is_superuser=True)
         payload = dict(name="new tag", user_id=user.id)
 
@@ -31,7 +31,7 @@ class TagListCreateViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['slug'], Tag.objects.last().slug)
 
-    def test_get_tag(self):
+    def test_tag_get_by_id(self):
         user = baker.make(User, is_superuser=True)
         tag = baker.make(Tag, user=user, name='New Tag')
         self.client.force_authenticate(user)
@@ -42,7 +42,7 @@ class TagListCreateViewTest(APITestCase):
         self.assertEqual(response.data['slug'], tag.slug)
         self.assertEqual(response.data['name'], tag.name)
 
-    def test_put_tag_not_found(self):
+    def test_tag_put_not_found(self):
         user = baker.make(User, is_superuser=True)
 
         self.client.force_authenticate(user)
@@ -52,7 +52,7 @@ class TagListCreateViewTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_put_tag(self):
+    def test_tag_put(self):
         user = baker.make(User, is_superuser=True)
         tag = baker.make(Tag, name='New Tag', user=user)
         payload = dict(name='New Tag 2')
@@ -65,7 +65,7 @@ class TagListCreateViewTest(APITestCase):
         self.assertEqual(response.data['name'], Tag.objects.last().name)
         self.assertEqual(response.data['slug'], Tag.objects.last().slug)
 
-    def test_destroy_tag(self):
+    def test_tag_destroy(self):
         user = baker.make(User, is_superuser=True)
         tag = baker.make(Tag, name='New Tag Destroy',
                          user=user, is_active=True)
@@ -74,7 +74,7 @@ class TagListCreateViewTest(APITestCase):
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_destroy_tag_not_found(self):
+    def test_tag_destroy_not_found(self):
         user = baker.make(User, is_superuser=True)
         baker.make(Tag, name='New Tag Destroy', user=user)
         self.client.force_authenticate(user)
@@ -284,7 +284,6 @@ class RecipeDetailViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], 'Special Recipe')
         self.assertEqual(response.data['time_minutes'], 40)
-
     
     def test_recipe_update_not_found(self):
         user = baker.make(User, is_superuser=True)
