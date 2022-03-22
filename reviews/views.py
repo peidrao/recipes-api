@@ -13,7 +13,7 @@ from .models import ReviewRecipe
 # O usuário só pode fazer uma avaliação para cada receita
 
 
-class ReviewReviewList(generics.ListCreateAPIView):
+class ReviewRecipeList(generics.ListCreateAPIView):
     queryset = ReviewRecipe.objects.filter(is_active=True)
     serializer_class = ReviewRecipeSerializer
     permission_classes = (IsAuthenticated, HasOnlyReview )
