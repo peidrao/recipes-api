@@ -17,7 +17,7 @@ class ReviewRecipe(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='user_review')
     recipe = models.ForeignKey(Recipe, on_delete=models.DO_NOTHING, related_name='recipe_review')
     
-    rate = models.IntegerField(choices=Rate, default=Rate.GOOD)
+    rate = models.IntegerField(choices=Rate.choices, default=Rate.GOOD)
     comment = models.TextField(null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
