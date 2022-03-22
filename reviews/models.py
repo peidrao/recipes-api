@@ -24,8 +24,11 @@ class ReviewRecipe(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(auto_now=True)
 
-
     class Meta:
         db_table = 'review_recipe'
+    
+    def __str__(self) -> str:
+        return str(self.rate)
+
 
 
