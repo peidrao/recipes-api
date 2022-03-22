@@ -1,6 +1,8 @@
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 
+from reviews.permissions import HasOnlyReview
+
 from .serializers import ReviewRecipeSerializer
 from .models import ReviewRecipe
 
@@ -14,4 +16,4 @@ from .models import ReviewRecipe
 class ReviewReviewList(generics.ListCreateAPIView):
     queryset = ReviewRecipe.objects.filter(is_active=True)
     serializer_class = ReviewRecipeSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, HasOnlyReview )
