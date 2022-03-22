@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authentication',
     'recipes',
+    'reviews',
 
     'rest_framework',
     'silk',
