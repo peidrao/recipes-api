@@ -10,4 +10,4 @@ from .models import ReviewRecipe
 class ReviewRecipeList(generics.ListCreateAPIView):
     queryset = ReviewRecipe.objects.filter(is_active=True)
     serializer_class = ReviewRecipeSerializer
-    permission_classes = (IsAuthenticated, HasOnlyReview )
+    permission_classes = (IsAuthenticated, HasOnlyReview)

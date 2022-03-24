@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from reviews.models import ReviewRecipe
 from .models import Recipe, Tag, Ingredient
 
 from authentication.serializers import UserSerializer
@@ -40,10 +42,11 @@ class IngredientSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
+    reviews = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
-        fields = ('title', 'price', 'time_minutes', 'ingredients', 'tags', 'image', 'user')
+        fields = ('title', 'price', 'time_minutes', 'ingredients', 'tags', 'image', 'user', 'reviews')
 
     def get_user(self, obj):
         if obj.user:
@@ -65,4 +68,19 @@ class RecipeSerializer(serializers.ModelSerializer):
             i['slug'] = tag.slug
             json.append(i)
         
+        return json
+
+    def get_reviews(self, obj):
+        reviews = ReviewRecipe.objects.filter(recipe_id=obj.id)
+        
+        json = []
+        if reviews.exists():
+            for i in reviews:
+                review = {}
+                review['id'] = i.id
+                review['user'] = i.user.username
+                review['rate'] = i.rate
+                review['comment'] = i.comment
+                json.append(review)
+
         return json
