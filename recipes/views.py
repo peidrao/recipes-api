@@ -87,3 +87,9 @@ class RecipeDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         serializer = self.serializer_class(recipe, many=False)
         return Response(serializer.data, status=200)
+
+
+class AllRecipeView(generics.ListAPIView):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
+        
