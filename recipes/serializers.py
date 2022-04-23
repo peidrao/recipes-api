@@ -43,6 +43,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
     reviews = serializers.SerializerMethodField()
+    ingredients = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
@@ -56,6 +57,9 @@ class RecipeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         instance = super(RecipeSerializer, self).create(validated_data)
         instance.user = self.context['request'].user
+        tags = self.context['request'].data['tags']
+        if tags:
+            instance.tags.set(tags)
         instance.save()
         return instance
 
@@ -69,6 +73,9 @@ class RecipeSerializer(serializers.ModelSerializer):
             json.append(i)
         
         return json
+
+    def get_ingredients(self, obj):
+        return obj.ingredients.all().values('name')
 
     def get_reviews(self, obj):
         reviews = ReviewRecipe.objects.filter(recipe_id=obj.id)
