@@ -1,5 +1,6 @@
-from rest_framework import viewsets, status, generics
+from rest_framework import status, generics
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from authentication.permissions import IsSuperUser
 from .permissions import HasUserPermission
@@ -15,7 +16,7 @@ class TagListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = self.queryset.filter(user=self.request.user)
         return queryset
-        
+
 
 class TagDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tag.objects.filter(is_active=True)
@@ -31,7 +32,7 @@ class TagDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)    
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
@@ -54,7 +55,7 @@ class IngredientListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = self.queryset.filter(user=self.request.user)
         return queryset
-        
+
 
 class IngredientDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ingredient.objects.all()
@@ -65,6 +66,13 @@ class IngredientDetailView(generics.RetrieveUpdateDestroyAPIView):
 class RecipeCreateView(generics.ListCreateAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def list(self, request, *args, **kwargs):
+        queryset = list(self.queryset.filter(user=request.user))
+        serializer = self.serializer_class(queryset, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class RecipeDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -79,4 +87,3 @@ class RecipeDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         serializer = self.serializer_class(recipe, many=False)
         return Response(serializer.data, status=200)
-
