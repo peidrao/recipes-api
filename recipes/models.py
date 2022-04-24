@@ -18,10 +18,7 @@ def recipe_image_file_path(instance, filename):
 class Tag(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)
-    origin = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING)
     is_active = models.BooleanField(default=True)
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True)
 
     def __str__(self) -> str:
         return str(self.name)
