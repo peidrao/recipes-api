@@ -13,15 +13,11 @@ class TagListCreateView(generics.ListCreateAPIView):
     serializer_class = TagSerializer
     permission_classes = (IsSuperUser,)
 
-    def get_queryset(self):
-        queryset = self.queryset.filter(user=self.request.user)
-        return queryset
-
 
 class TagDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tag.objects.filter(is_active=True)
     serializer_class = TagSerializer
-    permission_classes = (HasUserPermission,)
+    permission_classes = (IsAuthenticated,)
 
     def put(self, request, pk):
         try:
@@ -52,15 +48,11 @@ class IngredientListCreateView(generics.ListCreateAPIView):
     serializer_class = IngredientSerializer
     permission_classes = (IsSuperUser,)
 
-    def get_queryset(self):
-        queryset = self.queryset.filter(user=self.request.user)
-        return queryset
-
 
 class IngredientDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    permission_classes = (HasUserPermission,)
+    permission_classes = (IsAuthenticated,)
 
 
 class RecipeCreateView(generics.ListCreateAPIView):
@@ -92,4 +84,3 @@ class RecipeDetailView(generics.RetrieveUpdateDestroyAPIView):
 class AllRecipeView(generics.ListAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-        
