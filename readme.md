@@ -1,5 +1,12 @@
 # Recipes-API
 
+## Sobre o projeto
+
+| ![alt text](.midia/diagram.jpg) | 
+|:--:| 
+| *Diagrama de classes* |
+
+
 ## Tests
 
 Foi desenvolvido um padrão na criação de testes, na qual todos pudessem ter coesão, mesmo sendo de serviços diferentes. O padrão adotado foi o seguinte
