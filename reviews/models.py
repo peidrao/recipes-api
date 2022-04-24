@@ -14,7 +14,7 @@ class ReviewRecipe(models.Model):
         GREAT = 5
 
 
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='user_review')
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='user_review')
     recipe = models.ForeignKey(Recipe, on_delete=models.DO_NOTHING, related_name='recipe_review')
     
     rate = models.IntegerField(choices=Rate.choices, default=Rate.GOOD)
